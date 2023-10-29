@@ -55,7 +55,7 @@ class Scanner:
         return self._current >= len(self._source)
 
     def scan_tokens(self):
-        while not self.is_at_end and not self.peek() == '\n':
+        while not self.is_at_end and self.peek() != '\n':
             self._start = self._current
             self.scan_token()
 
