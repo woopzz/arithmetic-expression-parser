@@ -1,10 +1,9 @@
 # An arithmetic expression parser
 
-So we have [a one-line expression](./expression.txt). We should find out the resulting value.
+So we have [a one-line expression](./expression.txt). We want to know the result.
 
 <details>
-<summary>The actual result is ...</summary>
--56
+<summary>Actually, I already know ...</summary>-56
 </details>
 
 ---
@@ -13,7 +12,7 @@ So we have [a one-line expression](./expression.txt). We should find out the res
 
 ### First take
 
-A straightforward approach was to care only about digits (compose them into numbers) and the operators (plus and minus). But it did not work because a minus before an expression that is set off by parentheses toggles all signs inside the expression. Although it worked well for simpler expressions where there were no parens. That meant expressions in parens could be processed independently and then just replaced this part of the whole expression on the result.
+A straightforward approach was to care only about digits (compose them into numbers) and the operators (plus and minus). But it did not work because a minus before an expression, that is set off by parentheses, toggles all signs inside the expression. Although it worked well for simpler expressions without parens. So the problem could be solved by processing parenthetical expressions independently and then just replaced them on the result.
 
 ---
 
@@ -46,7 +45,7 @@ Some differences:
 - Accepts only one line. The parser stops when it consumes "\n".
 - The AST node generator is ommited. Not worth it in my case.
 - Fail-fast. I'm not bothered by getting errors one-by-one in this case.
-- Different error messages. Because we accept only one line, there is no need to store a line number. Instead, start & end column numbers are stored. When an error occurs, these numbers are used in the error message.
+- Different error messages. Because it accepts only one line, there is no need to store a line number. Instead, start & end column numbers are stored. When an error occurs, these numbers are used in the error message.
 - No checking that operands are numbers. All valid expressions boil down to numbers so, if I get it right, such situation cannot occur.
 
 Important! It exceeds the Python default recursion limit (`1000` for the interpreter on my machine). Hence `sys.setrecursionlimit(3000)`. It works for me. But there are some caveats about changing the recursion limit. [Check this thread.](https://stackoverflow.com/questions/3323001/what-is-the-maximum-recursion-depth-and-how-to-increase-it)
@@ -59,7 +58,7 @@ Important! It exceeds the Python default recursion limit (`1000` for the interpr
 
 I wondered about a simple but iterative algorithm. And I found it [here](https://eli.thegreenplace.net/2009/03/20/a-recursive-descent-parser-with-an-infix-expression-evaluator/). The shunting yard algorithm uses two stacks: operands and values. And no recursion. The implementation is easy in my case. I just rewrote on Python [the example from Wikipedia](https://en.wikipedia.org/wiki/Shunting_yard_algorithm#The_algorithm_in_detail).
 
-*There are several more articles about parsers in the blog (the first link). E.g. the algorithm J.B. mentioned in the video. Unfortunately, they are not binded compiled in a series. You should search for them through the archive.*
+*There are several more articles about parsers in the blog. E.g. the algorithm J.B. mentioned in the video. Unfortunately, they are not compiled in a series. You should search for them through the archive.*
 
 [Python](./shunting_yard.py)
 
