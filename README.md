@@ -13,7 +13,7 @@ So we have [a one-line expression](./expression.txt). We should find out the res
 
 ### First take
 
-A straightforward approach was to care only about digits (compose them into numbers) and the operators (plus and minus). But it did not work because a minus before an expression embraced with parenthesis toggles all signs inside the expression. Although it worked well for simpler expressions where there were no parens. That meant expressions in parens could be processed independently and then just replaced this part of the whole expression on the result.
+A straightforward approach was to care only about digits (compose them into numbers) and the operators (plus and minus). But it did not work because a minus before an expression that is set off by parentheses toggles all signs inside the expression. Although it worked well for simpler expressions where there were no parens. That meant expressions in parens could be processed independently and then just replaced this part of the whole expression on the result.
 
 ---
 
@@ -36,7 +36,7 @@ Thus, there is a stack for every "group". When a left paren appears, a new stack
 | 1+9 | | |
 | 10 | | |
 
-[Python](./stack_per_embraced_expression.py)
+[Python](./stack_per_parenthetical_expression.py)
 
 ### Second take
 
