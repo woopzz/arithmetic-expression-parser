@@ -64,12 +64,12 @@ class Scanner:
     def scan_token(self):
         c = self.advance()
         match c:
-            case '+': self.addToken(TokenType.PLUS)
-            case '-': self.addToken(TokenType.MINUS)
-            case '*': self.addToken(TokenType.STAR)
-            case '/': self.addToken(TokenType.SLASH)
-            case '(': self.addToken(TokenType.LEFT_PAREN)
-            case ')': self.addToken(TokenType.RIGHT_PAREN)
+            case '+': self.add_token(TokenType.PLUS)
+            case '-': self.add_token(TokenType.MINUS)
+            case '*': self.add_token(TokenType.STAR)
+            case '/': self.add_token(TokenType.SLASH)
+            case '(': self.add_token(TokenType.LEFT_PAREN)
+            case ')': self.add_token(TokenType.RIGHT_PAREN)
             case ' ': pass
             case _:
                 if self.is_digit(c):
@@ -82,7 +82,7 @@ class Scanner:
         self._current += 1
         return c
 
-    def addToken(self, type, literal=None):
+    def add_token(self, type, literal=None):
         self._tokens.append(Token(type, literal, self._start, self._current-1))
 
     def is_digit(self, c):
@@ -98,7 +98,7 @@ class Scanner:
             while self.is_digit(self.peek()):
                 self.advance()
 
-        self.addToken(TokenType.NUMBER, float(self._source[self._start:self._current]))
+        self.add_token(TokenType.NUMBER, float(self._source[self._start:self._current]))
 
     def peek(self):
         if self.is_at_end:
