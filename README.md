@@ -26,3 +26,15 @@ Some differences:
 Important! It exceeds the Python default recursion limit (`1000` for the interpreter on my machine). Hence `sys.setrecursionlimit(3000)`. It works for me. But there are some caveats about changing the recursion limit. [Check this thread.](https://stackoverflow.com/questions/3323001/what-is-the-maximum-recursion-depth-and-how-to-increase-it)
 
 [Python](./recursive_descent.py)
+
+### Third take
+
+_[Guido does not want the tail recursion in Python](https://neopythonic.blogspot.com/2009/04/final-words-on-tail-calls.html). So we have a huge call stack without optimizations._
+
+I wondered about a simple but iterative algorithm. And I found him [here](https://eli.thegreenplace.net/2009/03/20/a-recursive-descent-parser-with-an-infix-expression-evaluator/). The shunting yard algorithm uses two stacks: operands and values. And no recursion. The implementation is easy in my case. I just rewrote on Python [the example from Wikipedia](https://en.wikipedia.org/wiki/Shunting_yard_algorithm#The_algorithm_in_detail).
+
+_There are several more articles about parsers in the blog (the first link). E.g. the algorithm J.B. mentioned in the video. Unfortunately, they are not binded compiled in a series. You should search for them through the archive._
+
+[Python](./shunting_yard.py)
+
+By the way, there is [an intresting video with Jonathan Blow and Casey Muratori](https://www.youtube.com/watch?v=MnctEW1oL-E&lc=UgyXFRaTPpT7E0R09Nh4AaABAg&t=4080). Also there is a cool comment (if you go by the link, it should be "highlighted"; basically, it should be the first one). I did not use that algorithm because it is also recursive.
