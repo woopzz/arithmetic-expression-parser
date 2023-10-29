@@ -21,7 +21,6 @@ class TokenType(enum.Enum):
 @dataclasses.dataclass()
 class Token:
     type: TokenType
-    lexeme: str | None
     literal: float | None
     start_at: int
     end_at: int
@@ -84,8 +83,7 @@ class Scanner:
         return c
 
     def addToken(self, type, literal=None):
-        lexeme = self._source[self._start:self._current]
-        self._tokens.append(Token(type, lexeme, literal, self._start, self._current-1))
+        self._tokens.append(Token(type, literal, self._start, self._current-1))
 
     def is_digit(self, c):
         return 48 <= ord(c) <= 57
