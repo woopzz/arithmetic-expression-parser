@@ -65,7 +65,14 @@ class Scanner:
         c = self.advance()
         match c:
             case '+': self.add_token(TokenType.PLUS)
-            case '-': self.add_token(TokenType.MINUS)
+            case '-':
+                if (
+                    not self._tokens or
+                    (self._tokens[-1].type != TokenType.NUMBER and self._tokens[-1].type != TokenType.RIGHT_PAREN)
+                ):
+                    self.add_token(TokenType.UMINUS)
+                else:
+                    self.add_token(TokenType.MINUS)
             case '*': self.add_token(TokenType.STAR)
             case '/': self.add_token(TokenType.SLASH)
             case '(': self.add_token(TokenType.LEFT_PAREN)
