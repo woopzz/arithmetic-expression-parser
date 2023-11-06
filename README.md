@@ -56,7 +56,8 @@ I wondered about a simple but iterative algorithm. And I found it [here](https:/
 
 *There are several more articles about parsers in the blog. E.g. the algorithm J.B. mentioned in the video. Unfortunately, they are not compiled in a series. You should search for them through the archive.*
 
-[Python](./shunting_yard.py)
+- [Python](./shunting_yard.py)
+- [Rust](./shunting_yard.rs)
 
 *By the way, there is [an intresting video with Jonathan Blow and Casey Muratori](https://www.youtube.com/watch?v=MnctEW1oL-E&lc=UgyXFRaTPpT7E0R09Nh4AaABAg&t=4080). Also there is a cool comment (if you go by the link, it should be "highlighted"; basically, it should be the first one). I did not use that algorithm because it is also recursive.*
 
