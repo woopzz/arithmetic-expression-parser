@@ -2,10 +2,6 @@
 
 So we have [a one-line expression](./expression.txt). We want to know the result.
 
-<details>
-<summary>Actually, I already know ...</summary>-56
-</details>
-
 ---
 
 *Some implementations support multiplication and division. Although these operations are not presented in the expression.*
@@ -63,3 +59,10 @@ I wondered about a simple but iterative algorithm. And I found it [here](https:/
 [Python](./shunting_yard.py)
 
 *By the way, there is [an intresting video with Jonathan Blow and Casey Muratori](https://www.youtube.com/watch?v=MnctEW1oL-E&lc=UgyXFRaTPpT7E0R09Nh4AaABAg&t=4080). Also there is a cool comment (if you go by the link, it should be "highlighted"; basically, it should be the first one). I did not use that algorithm because it is also recursive.*
+
+### Yeah, but ...
+
+```bash
+$ bc < expression.txt
+-56
+```
