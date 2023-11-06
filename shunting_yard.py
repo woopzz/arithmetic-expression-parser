@@ -6,16 +6,21 @@ import dataclasses
 class ParseError(Exception):
     pass
 
+# TokenType is not an enum anymore. Because we need a precedence for every operator.
+# We can utilize zero precedence to distinguish operators from other token types.
+@dataclasses.dataclass()
+class TokenType:
+    precedence: int
 
-class TokenType(enum.Enum):
-    NUMBER = enum.auto()
-    PLUS = enum.auto()
-    MINUS = enum.auto()
-    UMINUS = enum.auto()
-    STAR = enum.auto()
-    SLASH = enum.auto()
-    LEFT_PAREN = enum.auto()
-    RIGHT_PAREN = enum.auto()
+UMINUS = TokenType(4)
+STAR = TokenType(3)
+SLASH = TokenType(3)
+PLUS = TokenType(2)
+MINUS = TokenType(2)
+
+NUMBER = TokenType(0)
+LEFT_PAREN = TokenType(0)
+RIGHT_PAREN = TokenType(0)
 
 
 @dataclasses.dataclass()
@@ -24,15 +29,6 @@ class Token:
     literal: float | None
     start_at: int
     end_at: int
-
-
-OPERATOR_TOKEN_TYPE_TO_PRECEDENCE = {
-    TokenType.PLUS: 2,
-    TokenType.MINUS: 2,
-    TokenType.UMINUS: 4,
-    TokenType.STAR: 3,
-    TokenType.SLASH: 3,
-}
 
 
 # It is a copy from "recursive_descent.py".
@@ -64,19 +60,19 @@ class Scanner:
     def scan_token(self):
         c = self.advance()
         match c:
-            case '+': self.add_token(TokenType.PLUS)
+            case '+': self.add_token(PLUS)
             case '-':
                 if (
                     not self._tokens or
-                    (self._tokens[-1].type != TokenType.NUMBER and self._tokens[-1].type != TokenType.RIGHT_PAREN)
+                    (self._tokens[-1].type is not NUMBER and self._tokens[-1].type is not RIGHT_PAREN)
                 ):
-                    self.add_token(TokenType.UMINUS)
+                    self.add_token(UMINUS)
                 else:
-                    self.add_token(TokenType.MINUS)
-            case '*': self.add_token(TokenType.STAR)
-            case '/': self.add_token(TokenType.SLASH)
-            case '(': self.add_token(TokenType.LEFT_PAREN)
-            case ')': self.add_token(TokenType.RIGHT_PAREN)
+                    self.add_token(MINUS)
+            case '*': self.add_token(STAR)
+            case '/': self.add_token(SLASH)
+            case '(': self.add_token(LEFT_PAREN)
+            case ')': self.add_token(RIGHT_PAREN)
             case ' ': pass
             case _:
                 if self.is_digit(c):
@@ -105,7 +101,7 @@ class Scanner:
             while self.is_digit(self.peek()):
                 self.advance()
 
-        self.add_token(TokenType.NUMBER, float(self._source[self._start:self._current]))
+        self.add_token(NUMBER, float(self._source[self._start:self._current]))
 
     def peek(self):
         if self.is_at_end:
@@ -124,32 +120,30 @@ def parse(tokens):
     output_queue = []
     operators = []
 
-    operator_token_types = set(OPERATOR_TOKEN_TYPE_TO_PRECEDENCE.keys())
-
     while current < len(tokens):
         token = tokens[current]
         current += 1
 
-        if token.type is TokenType.NUMBER:
+        if token.type is NUMBER:
             output_queue.append(token.literal)
             continue
 
-        if token.type in operator_token_types:
+        if token.type.precedence:
             while (
                 operators
-                and operators[-1].type is not TokenType.LEFT_PAREN
-                and OPERATOR_TOKEN_TYPE_TO_PRECEDENCE[operators[-1].type] >= OPERATOR_TOKEN_TYPE_TO_PRECEDENCE[token.type]
+                and operators[-1].type is not LEFT_PAREN
+                and operators[-1].type.precedence >= token.type.precedence
             ):
                 output_queue.append(evaluate(operators.pop(), output_queue))
 
             operators.append(token)
 
-        if token.type is TokenType.LEFT_PAREN:
+        if token.type is LEFT_PAREN:
             operators.append(token)
             continue
 
-        if token.type is TokenType.RIGHT_PAREN:
-            while operators and operators[-1].type is not TokenType.LEFT_PAREN:
+        if token.type is RIGHT_PAREN:
+            while operators and operators[-1].type is not LEFT_PAREN:
                 output_queue.append(evaluate(operators.pop(), output_queue))
 
             if not operators:
@@ -159,7 +153,7 @@ def parse(tokens):
 
     while operators:
         operator = operators.pop()
-        if operator.type is TokenType.LEFT_PAREN:
+        if operator.type is LEFT_PAREN:
             raise ParseError(f'Mismatched left paren at position {operator.start_at}.')
 
         output_queue.append(evaluate(operator, output_queue))
@@ -171,13 +165,18 @@ def parse(tokens):
 
 def evaluate(token, output_queue):
     operand = output_queue.pop()
-    match token.type:
-        case TokenType.PLUS: return output_queue.pop() + operand
-        case TokenType.MINUS: return output_queue.pop() - operand
-        case TokenType.UMINUS: return -operand
-        case TokenType.STAR: return output_queue.pop() * operand
-        case TokenType.SLASH: return output_queue.pop() / operand
-        case _: raise ParseError(f'Invalid token type (at pos {token.start_at}..{token.end_at}) when an operator expected.')
+    if token.type is PLUS:
+        return output_queue.pop() + operand
+    if token.type is MINUS:
+        return output_queue.pop() - operand
+    if token.type is UMINUS:
+        return -operand
+    if token.type is STAR:
+        return output_queue.pop() * operand
+    if token.type is SLASH:
+        return output_queue.pop() / operand
+
+    raise ParseError(f'Invalid token type (at pos {token.start_at}..{token.end_at}) when an operator expected.')
 
 def get_source():
     with open('expression.txt', 'r') as f:
