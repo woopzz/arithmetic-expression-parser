@@ -52,15 +52,15 @@ Important! It exceeds the Python default recursion limit (`1000` for the interpr
 
 *[Guido does not want the tail recursion in Python](https://neopythonic.blogspot.com/2009/04/final-words-on-tail-calls.html). So we have a huge call stack without optimizations.*
 
-I wondered about a simple but iterative algorithm. And I found it [here](https://eli.thegreenplace.net/2009/03/20/a-recursive-descent-parser-with-an-infix-expression-evaluator/). The shunting yard algorithm uses two stacks: operands and values. And no recursion. The implementation is easy in my case. I just rewrote on Python [the example from Wikipedia](https://en.wikipedia.org/wiki/Shunting_yard_algorithm#The_algorithm_in_detail).
-
-*There are several more articles about parsers in the blog. E.g. the algorithm J.B. mentioned in the video. Unfortunately, they are not compiled in a series. You should search for them through the archive.*
+I wondered about a simple but iterative algorithm. And I found it [here](https://eli.thegreenplace.net/2009/03/20/a-recursive-descent-parser-with-an-infix-expression-evaluator/). The shunting yard algorithm uses two stacks: operands and values. And no recursion. The implementation is easy in my case. I just rewrote to Python [the example from Wikipedia](https://en.wikipedia.org/wiki/Shunting_yard_algorithm#The_algorithm_in_detail). (And then I rewrote it to other languages in order to learn them better.)
 
 - [Python](./shunting_yard.py)
 - [C](./shunting_yard.c)
 - [Rust](./shunting_yard.rs)
 
 *By the way, there is [an intresting video with Jonathan Blow and Casey Muratori](https://www.youtube.com/watch?v=MnctEW1oL-E&lc=UgyXFRaTPpT7E0R09Nh4AaABAg&t=4080). Also there is a cool comment (if you go by the link, it should be "highlighted"; basically, it should be the first one). I did not use that algorithm because it is also recursive.*
+
+*There are several more articles about parsers in that blog with the SHY algo. E.g. the algorithm J.B. mentioned in the video. Unfortunately, they are not compiled in a series. You should search for them through the archive.*
 
 ### Yeah, but ...
 
